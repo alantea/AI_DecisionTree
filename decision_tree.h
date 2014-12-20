@@ -8,11 +8,10 @@
 
 // C++ library
 #include <fstream>
+#include <sstream>
 #include <iostream>
+#include <vector>
 #include <string>
-
-// define value
-int const MAX_SAMPLE = 700;
 
 class decision_tree
 {
@@ -20,17 +19,20 @@ class decision_tree
         void initial();
         
         void main_menu();
-		void trainingMain();	//Entrance of the training mode
-	
+		void trainingMain();	// Entrance of the training mode
 		int entropy(int sequence[25][2]);
-        int attribute[MAX_SAMPLE][25];
+	
+		int MAX_SAMPLE;	// count the total sample
+//      int attribute[MAX_SAMPLE][25];
+		std::vector<std::vector<int> > attribute;
         int choseroad[25][6];
 	public:
         decision_tree();
         ~decision_tree();
 
 		void read_file();
-        void gain_tree(bool invaild[MAX_SAMPLE],int sequence[25][2],int root=24);
+ //       void gain_tree(bool invaild[MAX_SAMPLE],int sequence[25][2],int root=24);
+        void gain_tree(bool *invaild,int sequence[25][2],int root=24);
         void save_tree();
 };
 
