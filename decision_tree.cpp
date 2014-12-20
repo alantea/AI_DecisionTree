@@ -43,7 +43,7 @@ int decision_tree::entropy(int sequence[25][2])
                 /* in Node i*/ /* in attr(path) */  /* the branch */   /* the last attr */
             {
                 number++;          //number  : the number through the nodes of the path ++;
-            }
+            } 
         }
         if(number==j)             //When the path number = the number of satisfying the conditions
         {
