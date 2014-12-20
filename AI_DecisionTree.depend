@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1419084136 source:d:\1.study\1.lessons\junior\artificialintelligence\hw05_learning\ai_decisiontree\main.cpp
+	"decision_tree.h"
+	<iostream>
+
+1419083808 d:\1.study\1.lessons\junior\artificialintelligence\hw05_learning\ai_decisiontree\decision_tree.h
+	<cmath>
+	<unistd.h>
+	<fstream>
+	<iostream>
+
+1419084156 source:d:\1.study\1.lessons\junior\artificialintelligence\hw05_learning\ai_decisiontree\decision_tree.cpp
+	"decision_tree.h"
+

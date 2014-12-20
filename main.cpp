@@ -7,11 +7,16 @@ int main()
 {
     while(1)
     {
+		cout << "----------------------" << endl;
+        cout << "	MENU" << endl;
+        cout << "----------------------" << endl;
         cout << "1. Testing mode" << endl;
         cout << "2. Training mode" << endl;	//The first part : produce the decision tree.
 
         int option;
         cin >> option;
+        cin.clear();
+		cin.sync();
 
         switch(option)
         {

@@ -3,10 +3,12 @@
 
 // C library
 #include <cmath>
+#include <unistd.h>
 
 // C++ library
 #include <fstream>
 #include <iostream>
+
 // define value
 int const MAX_SAMPLE = 700;
 

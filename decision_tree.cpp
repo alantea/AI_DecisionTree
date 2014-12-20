@@ -43,7 +43,7 @@ int decision_tree::entropy(int sequence[25][2])
                 /* in Node i*/ /* in attr(path) */  /* the branch */   /* the last attr */
             {
                 number++;          //number  : the number through the nodes of the path ++;
-            } 
+            }
         }
         if(number==j)             //When the path number = the number of satisfying the conditions
         {
@@ -195,13 +195,18 @@ void trainingMain()
         goal.gain_tree(invaild,sequence);
         goal.save_tree();
 
+		cout << "End Training." << endl;
         cout << "Do you want to continued ? [y/n]" << endl;
 
         char cont;
         cin >> cont;
 
-        if(cont != 'y' && cont != 'Y')
-            break;
+        if(cont != 'y' && cont != 'Y'){
+			cout << "Return to MENU ..."<<endl;
+			usleep(500000);
+			break;
+        }
+
     }//end while
     return;
 }//end trainingMain()
