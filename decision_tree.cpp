@@ -2,6 +2,114 @@
 
 using namespace std;
 
+decision_tree::decision_tree()
+{
+	initial();
+
+	main_menu();
+}
+
+void decision_tree::initial()
+{
+    for(int i = 0 ; i < 25 ; i++)
+    {
+        for(int j = 0 ; j < 6 ; j++)
+        {
+            choseroad[i][j] = -3 ;
+        }
+    }
+}
+
+void decision_tree::main_menu()
+{
+	string str_buf;
+    while(1)
+    {
+		cout << "----------------------" << endl;
+        cout << "	MENU" << endl;
+        cout << "----------------------" << endl;
+        cout << "1. Testing mode" << endl;
+        cout << "2. Training mode" << endl;	//The first part : produce the decision tree.
+        cout << endl;
+        cout << "Enter option : " << ends;
+
+		getline(cin, str_buf);
+        int option = atoi(str_buf.c_str());
+        cin.clear();
+	//	cin.sync();			// can't not use in un*x system
+
+        switch(option)
+        {
+        case 1:
+            //testingMain();		//Entrance of the testing mode
+            break;
+        case 2:
+            trainingMain();		//Entrance of the training mode
+            break;
+        default:
+            cout << "This is an invalid option." << endl;
+            break;
+        }//end switch
+
+        cout << "Do you want to continue [y/N]? " << ends;
+
+		getline(cin, str_buf);
+		char cont = str_buf[0];
+
+        if(cont != 'y' && cont != 'Y')
+		{
+            break;
+		}
+    }//end while
+
+}
+
+decision_tree::~decision_tree()
+{
+
+}
+
+void decision_tree::trainingMain()
+/************************************************************************
+	Entrance of the training mode;
+------------------------------------------------------------------------
+	input : none;
+	return : none;
+************************************************************************/
+{
+	string str_buf;
+    while(1)
+    {
+        /** Build the tree, than output the tree.csv **/
+        bool invaild[MAX_SAMPLE] = {0};
+        int sequence[25][2];
+
+        for(int i=0; i<25; i++)
+        {
+            sequence[i][0]=25;
+            sequence[i][1]=25;
+        }
+
+        read_file();
+        gain_tree(invaild,sequence);
+        save_tree();
+
+		cout << "End Training." << endl;
+        cout << "Do you want to continue training [y/N]? " << ends;
+
+		getline(cin, str_buf);
+        char cont = str_buf[0];
+
+        if(cont != 'y' && cont != 'Y'){
+			cout << "Return to MENU ..."<<endl;
+			usleep(500000);
+			break;
+        }
+
+    }//end while
+    return;
+}//end trainingMain()
+
 int decision_tree::entropy(int sequence[25][2])
 {
     int min_attr = 0;
@@ -104,32 +212,22 @@ int decision_tree::entropy(int sequence[25][2])
     return min_attr;//return the (best) attribute.
 }
 
-decision_tree::decision_tree()
-{
-    for(int i = 0 ; i < 25 ; i++)
-    {
-        for(int j = 0 ; j < 6 ; j++)
-        {
-            choseroad[i][j] = -3 ;
-        }
-    }
-}
-
-decision_tree::~decision_tree()
-{
-
-}
-
 void decision_tree::read_file()
 {
+	string input_file = "TraData700.csv";
     fstream train_file;
-    train_file.open( "TraData700.csv" , fstream::in );
-    int i,j;
+	train_file.open( input_file.c_str() , fstream::in );
     char delimiter;
+	
+	if( !train_file.is_open() )
+	{
+		cout << "Can't open the training file " << input_file << endl;
+		exit(-1);
+	}
 
-    for(i=0 ; i < MAX_SAMPLE ; i++)
+    for(int i=0; i < MAX_SAMPLE; i++)
     {
-        for(j=0 ; j < 25 ; j++)
+        for(int j=0; j < 25; j++)
         {
             train_file >> attribute[i][j] >> delimiter ;
         }
@@ -174,47 +272,3 @@ void decision_tree::save_tree()
     }
     tree.close();
 }
-
-void trainingMain()
-/************************************************************************
-	Entrance of the training mode;
-------------------------------------------------------------------------
-	input : none;
-	return : none;
-************************************************************************/
-{
-	string str_buf;
-    while(1)
-    {
-        /** Build the tree, than output the tree.csv **/
-        decision_tree goal;
-        bool invaild[MAX_SAMPLE] = {0};
-        int sequence[25][2];
-
-        for(int i=0; i<25; i++)
-        {
-            sequence[i][0]=25;
-            sequence[i][1]=25;
-        }
-
-        goal.read_file();
-        goal.gain_tree(invaild,sequence);
-        goal.save_tree();
-
-		cout << "End Training." << endl;
-        cout << "Do you want to continued [y/N]? " << ends;
-
-		getline(cin, str_buf);
-        char cont = str_buf[0];
-
-        if(cont != 'y' && cont != 'Y'){
-			cout << "Return to MENU ..."<<endl;
-			usleep(500000);
-			break;
-        }
-
-    }//end while
-    return;
-}//end trainingMain()
-
-
