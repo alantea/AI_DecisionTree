@@ -6,7 +6,7 @@
 
 // C++ library
 #include <fstream>
-
+#include <iostream>
 // define value
 int const MAX_SAMPLE = 700;
 

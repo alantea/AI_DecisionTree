@@ -1,4 +1,5 @@
 #include "decision_tree.h"
+using namespace std;
 
 int decision_tree::entropy(int sequence[25][2])
 {
