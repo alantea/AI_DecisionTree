@@ -173,10 +173,6 @@ void decision_tree::save_tree()
 void trainingMain()
 /************************************************************************
 	Entrance of the training mode;
-	will read one file:
-			to load the training data, traData.csv
-	will output one file:
-			to record the decision tree : tree.csv
 ------------------------------------------------------------------------
 	input : none;
 	return : none;
