@@ -4,22 +4,35 @@ using namespace std;
 
 int main()
 {
-	// The first part : produce the decision tree.
-	decision_tree goal;
-	bool invaild[MAX_SAMPLE] = {0};
-	int sequence[25][2];
-	
-	for(int i=0;i<25;i++)
-	{
-		sequence[i][0]=25;
-		sequence[i][1]=25;
-	}
-	
-	goal.read_file();
-	goal.gain_tree(invaild,sequence);
-	goal.save_tree();
-	
-	// The second part : test the data.
+    while(1)
+    {
+        cout << "1. Testing mode" << endl;	//The first part : produce the decision tree.
+        cout << "2. Training mode" << endl;
+
+        int option;
+        cin >> option;
+
+        switch(option)
+        {
+        case 1:
+            testingMain();		//Entrance of the testing mode
+            break;
+        case 2:
+            //trainingMain();		//Entrance of the training mode
+            break;
+        default:
+            cout << "This is an invalid option." << endl;
+            break;
+        }//end switch
+
+        cout << "Do you want to continued ? [y/n]" << endl;
+
+        char cont;
+        cin >> cont;
+
+        if(cont != 'y' && cont != 'Y')
+            break;
+    }//end while
 
 	return 0;
 }

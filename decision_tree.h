@@ -8,7 +8,7 @@
 #include <fstream>
 
 // define value
-#define MAX_SAMPLE 700
+int const MAX_SAMPLE = 700;
 
 using namespace std;
 
@@ -24,5 +24,7 @@ class decision_tree
         void gain_tree(bool invaild[MAX_SAMPLE],int sequence[25][2],int root=24);
         void save_tree();
 };
+
+void trainingMain();	//Entrance of the training mode
 
 #endif // DECISON_TREE_H_INCLUDED
