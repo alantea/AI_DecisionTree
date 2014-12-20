@@ -1,4 +1,5 @@
 #include "decision_tree.h"
+
 using namespace std;
 
 int decision_tree::entropy(int sequence[25][2])
@@ -105,14 +106,18 @@ int decision_tree::entropy(int sequence[25][2])
 
 decision_tree::decision_tree()
 {
-    int i,j;
-    for(i=0 ; i < 25 ; i++)
+    for(int i = 0 ; i < 25 ; i++)
     {
-        for(j=0 ; j < 6 ; j++)
+        for(int j = 0 ; j < 6 ; j++)
         {
             choseroad[i][j] = -3 ;
         }
     }
+}
+
+decision_tree::~decision_tree()
+{
+
 }
 
 void decision_tree::read_file()
@@ -178,6 +183,7 @@ void trainingMain()
 	return : none;
 ************************************************************************/
 {
+	string str_buf;
     while(1)
     {
         /** Build the tree, than output the tree.csv **/
@@ -196,10 +202,10 @@ void trainingMain()
         goal.save_tree();
 
 		cout << "End Training." << endl;
-        cout << "Do you want to continued ? [y/n]" << endl;
+        cout << "Do you want to continued [y/N]? " << ends;
 
-        char cont;
-        cin >> cont;
+		getline(cin, str_buf);
+        char cont = str_buf[0];
 
         if(cont != 'y' && cont != 'Y'){
 			cout << "Return to MENU ..."<<endl;
