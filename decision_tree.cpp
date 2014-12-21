@@ -37,7 +37,7 @@ void decision_tree::main_menu()
 		getline(cin, str_buf);
         int option = atoi(str_buf.c_str());
         cin.clear();
-	//	cin.sync();			// can't not use in un*x system
+	//	cin.sync();			// can't not use in Unix system
 
         switch(option)
         {
@@ -52,7 +52,7 @@ void decision_tree::main_menu()
             break;
         }//end switch
 
-        cout << "Do you want to continue [y/N]? " << ends;
+        cout << "Do you want to continue [y/N]? " << endl;
 
 		getline(cin, str_buf);
 		char cont = str_buf[0];
@@ -96,7 +96,7 @@ void decision_tree::trainingMain()
 		{
 			invaild[i] = false;
 		}
-        
+
         gain_tree(invaild,sequence);
         save_tree();
 
@@ -122,12 +122,12 @@ void decision_tree::read_file()
 	string input_file = "TraData700.csv";
     fstream train_file;
 	train_file.open( input_file.c_str() , fstream::in );
-    
+
 	string input_buf;
 	vector<int> input_num;
 
 	int tmp;
-	
+
 	if( !train_file.is_open() )
 	{
 		cout << "Can't open the training file " << input_file << endl;
