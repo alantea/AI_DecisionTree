@@ -81,17 +81,18 @@ void decision_tree::trainingMain()
     while(1)
     {
         /** Build the tree, then output the tree.csv **/
-        int sequence[25][2];
+        
+        int path[25][2];
 
         for(int i=0; i<25; i++)
         {
-            sequence[i][0]=25;
-            sequence[i][1]=25;
+            path[i][0]=25;
+            path[i][1]=25;
         }
 
         read_file();
 
-        gain_tree(sequence);
+        gain_tree(path);
         save_tree();
 
 		cout << "End Training." << endl;
@@ -149,11 +150,12 @@ void decision_tree::read_file()
     train_file.close();
 }
 
-void decision_tree::gain_tree(int sequence[25][2],int root,int branch)
+void decision_tree::gain_tree(int path[25][2],int root,int branch)
 {
+	// count attributes has gone
 	int path_length = 0;
 	
-	for(path_length = 0;sequence[path_length][0]!=25;path_length++);
+	for(path_length = 0;path[path_length][0]!=25;path_length++);
 	
 	if(path_length == 24)
 	{
@@ -161,9 +163,9 @@ void decision_tree::gain_tree(int sequence[25][2],int root,int branch)
 	}
 	
 	attr next_attr = {0,0,0} ;
-	next_attr = entropy(sequence);//compute the entropies to choose the attribute.
+	next_attr = entropy(path);//compute the entropies to choose the attribute.
 	choseroad[root][branch] = next_attr.name;
-	sequence[path_length][0]= next_attr.name;
+	path[path_length][0]= next_attr.name;
 	
 	if(next_attr.name < 0)
 	{
@@ -171,9 +173,9 @@ void decision_tree::gain_tree(int sequence[25][2],int root,int branch)
 	}
 	for(int i = next_attr.min_value ; i <= next_attr.max_value ; i++)
 	{
-		sequence[path_length][1] = i;
-		gain_tree(sequence,next_attr.name,i);
-		sequence[path_length][1] = 25;
+		path[path_length][1] = i;
+		gain_tree(path,next_attr.name,i);
+		path[path_length][1] = 25;
 	}
 }
 
@@ -198,7 +200,7 @@ void decision_tree::save_tree()
     tree.close();
 }
 
-attr decision_tree::entropy(int sequence[25][2])
+attr decision_tree::entropy(int path[25][2])
 {
 	attr min_attr = { 0 , 5 , 0};
 	double min_number = MAX_SAMPLE;
@@ -226,7 +228,7 @@ attr decision_tree::entropy(int sequence[25][2])
 	for(i=0;i<MAX_SAMPLE;i++)
 	{
 		number=0;                 //number(initialize)
-		if(sequence[0][0]==25)    //When no path, pick all of the nodes.
+		if(path[0][0]==25)    //When no path, pick all of the nodes.
 		{
 			if(attribute[i][24] == 1)//When the answer =1, record (node:1).
 			{
@@ -242,9 +244,9 @@ attr decision_tree::entropy(int sequence[25][2])
 			continue;
 		}
 		//  When having path, check whether the node is in the path or not.
-		for(j=0;sequence[j][0] != 25;j++)
+		for(j=0;path[j][0] != 25;j++)
 		{
-			if(attribute      [i]        [sequence[j][0]] == sequence[j][1])
+			if(attribute      [i]        [path[j][0]] == path[j][1])
 						/* in Node i*/	/* in attr(path) */  /* the branch */
 			{
 				number++;          //number  : the number through the nodes of the path ++;
@@ -283,9 +285,9 @@ attr decision_tree::entropy(int sequence[25][2])
 	//compute the entropy.
 	for(i=0;i<25;i++)               //Check all attributes.
 	{
-		for(j=0;       sequence[j][0] != i    &&  sequence[j][0] !=25 ;j++);
+		for(j=0;       path[j][0] != i    &&  path[j][0] !=25 ;j++);
 				//the attr in path, filter it.  //the attr not in path
-		if(sequence[j][0] == i || i==1 || i==3 || i==9) //When the range isn't 0~5, filter it.
+		if(path[j][0] == i || i==1 || i==3 || i==9) //When the range isn't 0~5, filter it.
 		{
 			continue;
 		}

@@ -28,7 +28,7 @@ class decision_tree
 
         void main_menu();
 		void trainingMain();	// Entrance of the training mode
-		attr entropy(int sequence[25][2]);
+		attr entropy(int path[25][2]);
 
 		int MAX_SAMPLE;	// count the total sample
 		std::vector<std::vector<int> > attribute;
@@ -38,7 +38,7 @@ class decision_tree
         ~decision_tree();
 
 		void read_file();
-        void gain_tree(int sequence[25][2],int root=24,int branch=0);
+        void gain_tree(int path[25][2],int root=24,int branch=0);
         void save_tree();
 };
 
