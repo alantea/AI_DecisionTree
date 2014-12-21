@@ -54,10 +54,10 @@ void decision_tree::main_menu()
         switch(option)
         {
         case 1:
-            testingMain();		//Entrance of the testing mode
+            testing_main();		//Entrance of the testing mode
             break;
         case 2:
-            trainingMain();		//Entrance of the training mode
+            training_main();		//Entrance of the training mode
             break;
         default:
             cout << "This is an invalid option." << endl;
@@ -81,7 +81,36 @@ decision_tree::~decision_tree()
 {
 }
 
-void decision_tree::trainingMain()
+void decision_tree::testing_main()
+/************************************************************************
+	Entrance of the testing mode;
+------------------------------------------------------------------------
+	input : none;
+	return : none;
+************************************************************************/
+{
+	string str_buf;
+    while(1)
+    {
+
+
+		cout << "End Testing." << endl;
+        cout << "Do you want to continue training [y/N]? " << ends;
+
+		getline(cin, str_buf);
+        char cont = str_buf[0];
+
+        if(cont != 'y' && cont != 'Y'){
+			cout << "Return to MENU ..."<<endl;
+			usleep(500000);
+			break;
+        }
+
+    }//end while
+    return;
+}//end testing_main()
+
+void decision_tree::training_main()
 /************************************************************************
 	Entrance of the training mode;
 ------------------------------------------------------------------------
@@ -93,7 +122,7 @@ void decision_tree::trainingMain()
     while(1)
     {
         /** Build the tree, then output the tree.csv **/
-        
+
 		/*  path : record the path
 		 *	parm1 : attribute
 		 *  parm2 : 0 -> attribute name
@@ -171,10 +200,10 @@ void decision_tree::gain_tree(int path[25][2],int root,int branch)
 {
 	// count attributes have gone
 	int path_length = 0;
-	
+
 	// check all attribute have been gone
 	for(path_length = 0;path[path_length][0]!=25;path_length++);
-	
+
 	// pass attribute 1 , 3 , 9
 	if(path_length == 24 - 3)
 	{
@@ -182,15 +211,15 @@ void decision_tree::gain_tree(int path[25][2],int root,int branch)
 		return;
 	}
 
-	
+
 	attr next_attr;
 	next_attr = entropy(path);//compute the entropies to choose the attribute
-	
+
 	/* When first time in gain tree, it will record the first attribute to go
 	 * Ex: choseroad[24][0] = 3 means first the decision tree will look the attribute 3 in the first
 	 */
 	choseroad[root][branch] = next_attr.name;
-	
+
 	// if the maximum informaction conent = 0 , it doesn't need to know the subtree
 	if(next_attr.name < 0)
 	{
@@ -203,7 +232,7 @@ void decision_tree::gain_tree(int path[25][2],int root,int branch)
 		gain_tree(path,next_attr.name,i);
 		path[path_length][0] = 25;
 		path[path_length][1] = 25;
-		
+
 		if( complete_tree )
 		{
 			return;
@@ -235,7 +264,7 @@ void decision_tree::save_tree()
 attr decision_tree::entropy(int path[25][2])
 {
 	attr min_attr(0 , INT_MAX , 0);
-	
+
 	// record the maximum entropy
 	double min_number = DBL_MAX;
 
@@ -243,7 +272,7 @@ attr decision_tree::entropy(int path[25][2])
 	 * parm1 : sample node
 	 * parm2 : 0 -> answer is '1'
 	 *		   1 -> answer is '2' */
-	int **node = NULL;  
+	int **node = NULL;
 
 	// dynamic allocate 'node' memory and initialize value
 	node = new int* [MAX_SAMPLE];
@@ -253,13 +282,13 @@ attr decision_tree::entropy(int path[25][2])
 		node[i][0]=-1;
 		node[i][1]=-1;
 	}
-	
+
 	//Pick the parent nodes
 	int i,j;
 	int number;					  //number  : the number through the nodes of the path
 	int answer1=0,answer2=0;      //the index of (node:1 , 2.)
 	int counter=0;                //counter : the number of the nodes
-	
+
 	for(i=0;i<MAX_SAMPLE;i++)
 	{
 		number=0;						//number(initialize)
@@ -330,7 +359,7 @@ attr decision_tree::entropy(int path[25][2])
 		int subnode_number[6][2]={{0}};					//the number of the sub-node : 1 , 2.
 		double info_content=0;							//the entropy (information content)
 		for(j=0; j<answer1 && node[j][0]!=-1 ;j++)      //get the number of the sub-node : 1.
-		{	
+		{
 			subnode_number[attribute      [node[j][0]]                 [i]     ][0]++;
 			/*the nodes in sub-tree*//* the next attr */
 			/*        the value(branch) in the  attribute				*/

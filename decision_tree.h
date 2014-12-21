@@ -31,9 +31,9 @@ class decision_tree
         void initial();
 
         void main_menu();
-        void testingMain();							//Entrance of the testing mode
-		void trainingMain();						// Entrance of the training mode
-		attr entropy(int path[25][2]);				
+        void testing_main();							//Entrance of the testing mode
+		void training_main();						// Entrance of the training mode
+		attr entropy(int path[25][2]);
 
 		int MAX_SAMPLE;								// count the total sample
 		std::vector<std::vector<int> > attribute;	// training data
