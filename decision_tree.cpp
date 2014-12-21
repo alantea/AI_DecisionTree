@@ -93,6 +93,7 @@ void decision_tree::testing_main()
     while(1)
     {
 
+		read_file("TraData700.csv");
 
 		cout << "End Testing." << endl;
         cout << "Do you want to continue training [y/N]? " << ends;
@@ -136,7 +137,7 @@ void decision_tree::training_main()
             path[i][1]=25;
         }
 
-        read_file();
+        read_file("TraData700.csv");
 
         gain_tree(path);
         save_tree();
@@ -157,9 +158,9 @@ void decision_tree::training_main()
     return;
 }//end trainingMain()
 
-void decision_tree::read_file()
+void decision_tree::read_file(string input_file)
 {
-	string input_file = "TraData700.csv";
+	//string input_file = "TraData700.csv";
     fstream train_file;
 	train_file.open( input_file.c_str() , fstream::in );
 
@@ -170,7 +171,7 @@ void decision_tree::read_file()
 
 	if( !train_file.is_open() )
 	{
-		cout << "Can't open the training file " << input_file << endl;
+		cout << "Can't open the file : " << input_file << endl;
 		exit(-1);
 	}
 

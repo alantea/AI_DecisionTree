@@ -43,8 +43,8 @@ class decision_tree
         decision_tree();
         ~decision_tree();
 
-		void read_file();
-        void gain_tree(int path[25][2],int root=24,int branch=0);
+		void read_file(std::string input_file);
+        void gain_tree(int path[25][2],int root = 24,int branch=0);
         void save_tree();
 };
 
