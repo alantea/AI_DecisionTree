@@ -18,7 +18,6 @@ void decision_tree::initial()
             choseroad[i][j] = -3 ;
         }
     }
-    MAX_SAMPLE = 0;
 }
 
 void decision_tree::main_menu()
@@ -67,6 +66,7 @@ void decision_tree::main_menu()
 
 decision_tree::~decision_tree()
 {
+
 }
 
 void decision_tree::trainingMain()
@@ -80,8 +80,8 @@ void decision_tree::trainingMain()
 	string str_buf;
     while(1)
     {
-        /** Build the tree, then output the tree.csv **/
-        bool *invaild = NULL;
+        /** Build the tree, than output the tree.csv **/
+        bool invaild[MAX_SAMPLE] = {0};
         int sequence[25][2];
 
         for(int i=0; i<25; i++)
@@ -91,12 +91,15 @@ void decision_tree::trainingMain()
         }
 
         read_file();
+<<<<<<< HEAD
         invaild = new bool [MAX_SAMPLE];
         for(int i=0; i<MAX_SAMPLE; i++)
 		{
 			invaild[i] = false;
 		}
 
+=======
+>>>>>>> parent of bc41493... input can use in unknown line
         gain_tree(invaild,sequence);
         save_tree();
 
@@ -112,11 +115,11 @@ void decision_tree::trainingMain()
 			break;
         }
 
-		delete [] invaild;
     }//end while
     return;
 }//end trainingMain()
 
+<<<<<<< HEAD
 void decision_tree::read_file()
 {
 	string input_file = "TraData700.csv";
@@ -194,6 +197,8 @@ void decision_tree::save_tree()
     tree.close();
 }
 
+=======
+>>>>>>> parent of bc41493... input can use in unknown line
 int decision_tree::entropy(int sequence[25][2])
 {
     int min_attr = 0;
@@ -294,4 +299,65 @@ int decision_tree::entropy(int sequence[25][2])
         }
     }
     return min_attr;//return the (best) attribute.
+}
+
+void decision_tree::read_file()
+{
+	string input_file = "TraData700.csv";
+    fstream train_file;
+	train_file.open( input_file.c_str() , fstream::in );
+    char delimiter;
+	
+	if( !train_file.is_open() )
+	{
+		cout << "Can't open the training file " << input_file << endl;
+		exit(-1);
+	}
+
+    for(int i=0; i < MAX_SAMPLE; i++)
+    {
+        for(int j=0; j < 25; j++)
+        {
+            train_file >> attribute[i][j] >> delimiter ;
+        }
+    }
+    train_file.close();
+}
+
+void decision_tree::gain_tree(bool invaild[MAX_SAMPLE],int sequence[25][2],int root)
+{
+    int vaild_number = 0;
+
+    for(vaild_number=0; vaild_number < MAX_SAMPLE && invaild[vaild_number] == 0; vaild_number++);
+
+    if(vaild_number == MAX_SAMPLE)  //Test whether it goes through all nodes.
+    {
+        return;
+    }
+    else
+    {
+        int next_attr = 0 ;
+        next_attr = entropy(sequence);//compute the entropies to choose the attribute.
+    }
+}
+
+void decision_tree::save_tree()
+{
+    fstream tree;
+    tree.open( "tree.csv" , fstream::out | fstream::trunc);
+    int i,j;
+
+    for(i=0 ; i < 25 ; i++)
+    {
+        for(j=0 ; j < 6 ; j++)
+        {
+            tree << choseroad[i][j] ;
+            if( j < 5 )
+            {
+                tree << ',' ;
+            }
+        }
+        tree << '\n' ;
+    }
+    tree.close();
 }
