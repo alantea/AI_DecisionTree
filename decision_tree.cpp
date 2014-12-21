@@ -50,12 +50,11 @@ void decision_tree::main_menu()
 		getline(cin, str_buf);
         int option = atoi(str_buf.c_str());
         cin.clear();
-	//	cin.sync();			// can't not use in un*x system
 
         switch(option)
         {
         case 1:
-            //testingMain();		//Entrance of the testing mode
+            testingMain();		//Entrance of the testing mode
             break;
         case 2:
             trainingMain();		//Entrance of the training mode

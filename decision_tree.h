@@ -31,6 +31,7 @@ class decision_tree
         void initial();
 
         void main_menu();
+        void testingMain();							//Entrance of the testing mode
 		void trainingMain();						// Entrance of the training mode
 		attr entropy(int path[25][2]);				
 
