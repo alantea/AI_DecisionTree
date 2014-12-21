@@ -29,3 +29,8 @@
 
 # outptu file
 tree.csv
+
+# code blocks
+AI_DecisionTree.cbp
+AI_DecisionTree.depend
+AI_DecisionTree.layout
