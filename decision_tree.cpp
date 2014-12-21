@@ -92,8 +92,10 @@ void decision_tree::testing_main()
 	string str_buf;
     while(1)
     {
+		read_file("TestData700.csv");
+		read_tree("tree.csv");
 
-		read_file("TraData700.csv");
+		search_tree();
 
 		cout << "End Testing." << endl;
         cout << "Do you want to continue training [y/N]? " << ends;
@@ -110,6 +112,84 @@ void decision_tree::testing_main()
     }//end while
     return;
 }//end testing_main()
+
+void decision_tree::read_tree(std::string input_file)
+{
+    fstream tree_file;
+	tree_file.open( input_file.c_str() , fstream::in );
+
+	string input_buf;
+
+	int tmp;
+
+	if( !tree_file.is_open() )
+	{
+		cout << "Can't open the file : " << input_file << endl;
+		exit(-1);
+	}
+
+	for(int i=0; getline(tree_file,input_buf); i++)
+	{
+		for(size_t j=0; j < input_buf.length() ; j++ )
+		{
+			if( input_buf[j] == ',' )
+			{
+				input_buf[j] = ' ';
+			}
+		}
+		stringstream ss(input_buf);
+		for(int j=0; ss >> tmp ; j++ )
+		{
+			choseroad[i][j] = tmp;
+		}
+	}
+
+    tree_file.close();
+}
+
+void decision_tree::search_tree()
+{
+	fstream fout( "output.csv" , ios::out | ios::trunc);
+	int mini , next_attr;
+
+	srand(time(NULL));
+	
+	for( size_t i = 0 ; i < attribute.size() ; i++ )
+	{
+		int now_attribute = choseroad[24][0];
+		clock_t tStart = clock(), tEnd, tUsed;
+		while(1)
+		{
+			tEnd = clock();
+			tUsed = (double)(tEnd - tStart) / CLOCKS_PER_SEC;
+			if( tUsed > 5.0 )
+			{
+				cerr << "Loooooooooooooooooooooooooop in search tree." << endl;
+				exit(-1);
+			}
+
+			mini = *min_element( attribute[i].begin() , attribute[i].end() );
+			next_attr = choseroad[now_attribute][ attribute[i][now_attribute] - mini ];
+
+			if( next_attr == -3 )	// no result
+			{
+				fout << rand()%2 + 1 << endl;
+				break;
+			}
+			else if( next_attr == -2 )
+			{
+				fout << "2" << endl;
+				break;
+			}
+			else if( next_attr == -1 )
+			{
+				fout << "1" << endl;
+				break;
+			}
+			now_attribute = next_attr;
+		}
+	}
+}
 
 void decision_tree::training_main()
 /************************************************************************
@@ -160,7 +240,6 @@ void decision_tree::training_main()
 
 void decision_tree::read_file(string input_file)
 {
-	//string input_file = "TraData700.csv";
     fstream train_file;
 	train_file.open( input_file.c_str() , fstream::in );
 

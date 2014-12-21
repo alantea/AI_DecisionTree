@@ -29,6 +29,7 @@
 
 # outptu file
 tree.csv
+output.csv
 
 # code blocks
 AI_DecisionTree.cbp

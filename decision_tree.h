@@ -6,9 +6,11 @@
 #include <cmath>
 #include <cfloat>
 #include <climits>
+#include <ctime>
 #include <unistd.h>	 //for usleep() only
 
 // C++ library
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -46,6 +48,9 @@ class decision_tree
 		void read_file(std::string input_file);
         void gain_tree(int path[25][2],int root = 24,int branch=0);
         void save_tree();
+			
+		void read_tree(std::string input_file);
+		void search_tree();
 };
 
 #endif // DECISON_TREE_H_INCLUDED
