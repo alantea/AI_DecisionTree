@@ -280,7 +280,7 @@ attr decision_tree::entropy(int path[25][2])
 			continue;
 		}
 		//  When having path, check whether the node is in the path or not.
-		for(j=0;j<25 && path[j][0]!=25 ;j++)
+		for(j=0;j<24 && path[j][0]!=25 ;j++)
 		{
 			if(attribute      [i]        [path[j][0]] == path[j][1])
 						/* in Node i*/	/* in attr(path) */  /* the branch */
@@ -320,9 +320,9 @@ attr decision_tree::entropy(int path[25][2])
 	}
 
 	//compute the entropy and get the minimum information content
-	for(i=0;i<25;i++)               //Check all attributes.
+	for(i=0;i<24;i++)               //Check all attributes.
 	{
-		for(j=0;j<25 &&    path[j][0] != i    &&  path[j][0] !=25 ;j++);
+		for(j=0;j<24 &&    path[j][0] != i    &&  path[j][0] !=25 ;j++);
 					 //the attr in path, filter it.  //the attr not in path
 		if(path[j][0] == i || i==1 || i==3 || i==9) //When the range isn't 0~5, filter it.
 		{
@@ -339,7 +339,7 @@ attr decision_tree::entropy(int path[25][2])
 		}
 		for(j=0; j<answer2 && node[j][1]!=-1 ;j++)
 		{
-			subnode_number[attribute      [node[j][1]]                [i]     ][1]++;
+			subnode_number[attribute      [node[j][1]]                 [i]     ][1]++;
 			/*the nodes in sub-tree*//* the next attr */
 			/*        the value(branch) in the  attribute      */
 			/*                  (the number of the sub-node : 2) ++                    */
@@ -350,9 +350,14 @@ attr decision_tree::entropy(int path[25][2])
 		{
 			prob0 = (double)subnode_number[j][0]/counter;
 			prob1 = (double)subnode_number[j][1]/counter;
-			info_content=-prob0 * log(prob0)/log(2.0)
-						 -prob1 * log(prob1)/log(2.0)
-						 + info_content;
+			if( prob0 != 0 )
+			{
+				info_content += - prob0 * log(prob0) / log(2.0);
+			}
+			if( prob1 != 0 )
+			{
+				info_content += - prob1 * log(prob1) / log(2.0);
+			}
 		}
 		if(min_number > info_content) // check whether the entropy of the attribute is  min(best) or not.
 		{
