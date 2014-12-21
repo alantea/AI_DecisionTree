@@ -225,7 +225,7 @@ void decision_tree::save_tree()
 
 attr decision_tree::entropy(int path[25][2])
 {
-	attr min_attr(0 , LONG_MAX , 0);
+	attr min_attr(0 , INT_MAX , 0);
 	
 	// record the maximum entropy
 	double min_number = DBL_MAX;
@@ -246,7 +246,7 @@ attr decision_tree::entropy(int path[25][2])
 	}
 	
 	//Pick the parent nodes
-	int i,j
+	int i,j;
 	int number;					  //number  : the number through the nodes of the path
 	int answer1=0,answer2=0;      //the index of (node:1 , 2.)
 	int counter=0;                //counter : the number of the nodes
