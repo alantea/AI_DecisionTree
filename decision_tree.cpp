@@ -2,6 +2,18 @@
 
 using namespace std;
 
+attr::attr()
+{
+	name = min_value = max_value = 0;
+}
+
+attr::attr(int a, int b ,int c)
+{
+	name = a;
+	min_value = b;
+	max_value = c;
+}
+
 decision_tree::decision_tree()
 {
 	initial();
@@ -82,6 +94,11 @@ void decision_tree::trainingMain()
     {
         /** Build the tree, then output the tree.csv **/
         
+		/*  path : record the path
+		 *	parm1 : attribute
+		 *  parm2 : 0 -> attribute name
+		 *			1 -> record the number which is matched will go
+		 */
         int path[25][2];
 
         for(int i=0; i<25; i++)
@@ -152,9 +169,10 @@ void decision_tree::read_file()
 
 void decision_tree::gain_tree(int path[25][2],int root,int branch)
 {
-	// count attributes has gone
+	// count attributes have gone
 	int path_length = 0;
 	
+	// check all attribute have been gone
 	for(path_length = 0;path[path_length][0]!=25;path_length++);
 	
 	if(path_length == 24)
@@ -162,11 +180,16 @@ void decision_tree::gain_tree(int path[25][2],int root,int branch)
 		return;
 	}
 	
-	attr next_attr = {0,0,0} ;
-	next_attr = entropy(path);//compute the entropies to choose the attribute.
+	attr next_attr;
+	next_attr = entropy(path);//compute the entropies to choose the attribute
+	
+	/* When first time in gain tree, it will record the first attribute to go
+	 * Ex: choseroad[24][0] = 3 means first the decision tree will look the attribute 3 in the first
+	 */
 	choseroad[root][branch] = next_attr.name;
 	path[path_length][0]= next_attr.name;
 	
+	// if the maximum informaction conent = 0 , it doesn't need to know the subtree
 	if(next_attr.name < 0)
 	{
 		return;
@@ -202,40 +225,43 @@ void decision_tree::save_tree()
 
 attr decision_tree::entropy(int path[25][2])
 {
-	attr min_attr = { 0 , 5 , 0};
-	double min_number = MAX_SAMPLE;
-	//int node[MAX_SAMPLE][2];      //the node : 1 , 2.
-	int **node = NULL;			  //the node : 1 , 2.
+	attr min_attr(0 , LONG_MAX , 0);
+	
+	// record the maximum entropy
+	double min_number = DBL_MAX;
 
+	/* node : record the subtree's node
+	 * parm1 : sample node
+	 * parm2 : 0 -> answer is '1'
+	 *		   1 -> answer is '2' */
+	int **node = NULL;  
 
+	// dynamic allocate 'node' memory and initialize value
 	node = new int* [MAX_SAMPLE];
 	for( int i = 0 ; i < MAX_SAMPLE ; i++ )
 	{
 		node[i] = new int [2];
-	}
-	
-	for(int i=0;i<MAX_SAMPLE;i++) //node(initialize)
-	{
 		node[i][0]=-1;
 		node[i][1]=-1;
 	}
 	
 	//Pick the parent nodes
-	int i,j,number;               //number  : the number through the nodes of the path
+	int i,j
+	int number;					  //number  : the number through the nodes of the path
 	int answer1=0,answer2=0;      //the index of (node:1 , 2.)
 	int counter=0;                //counter : the number of the nodes
 	
 	for(i=0;i<MAX_SAMPLE;i++)
 	{
-		number=0;                 //number(initialize)
-		if(path[0][0]==25)    //When no path, pick all of the nodes.
+		number=0;						//number(initialize)
+		if(path[0][0]==25)				//When no path, pick all of the nodes.
 		{
-			if(attribute[i][24] == 1)//When the answer =1, record (node:1).
+			if(attribute[i][24] == 1)	//When the answer =1, record (node:1).
 			{
 				node[answer1][0]=i;
 				answer1++;
 			}
-			else                     //When the answer =2, record (node:2).
+			else						//When the answer =2, record (node:2).
 			{
 				node[answer2][1]=i;
 				answer2++;
@@ -244,7 +270,7 @@ attr decision_tree::entropy(int path[25][2])
 			continue;
 		}
 		//  When having path, check whether the node is in the path or not.
-		for(j=0;path[j][0] != 25;j++)
+		for(j=0;j<25 && path[j][0]!=25 ;j++)
 		{
 			if(attribute      [i]        [path[j][0]] == path[j][1])
 						/* in Node i*/	/* in attr(path) */  /* the branch */
@@ -282,25 +308,26 @@ attr decision_tree::entropy(int path[25][2])
 		min_attr.name = -1;
 		return min_attr;
 	}
-	//compute the entropy.
+
+	//compute the entropy and get the minimum information content
 	for(i=0;i<25;i++)               //Check all attributes.
 	{
-		for(j=0;       path[j][0] != i    &&  path[j][0] !=25 ;j++);
-				//the attr in path, filter it.  //the attr not in path
+		for(j=0;j<25 &&    path[j][0] != i    &&  path[j][0] !=25 ;j++);
+					 //the attr in path, filter it.  //the attr not in path
 		if(path[j][0] == i || i==1 || i==3 || i==9) //When the range isn't 0~5, filter it.
 		{
 			continue;
 		}
-		int subnode_number[6][2]={{0}};         //the number of the sub-node : 1 , 2.
-		double info_content=0;                  //the entropy (information content)
-		for(j=0; node[j][0]!=-1 ;j++)           //get the number of the sub-node : 1.
+		int subnode_number[6][2]={{0}};					//the number of the sub-node : 1 , 2.
+		double info_content=0;							//the entropy (information content)
+		for(j=0; j<answer1 && node[j][0]!=-1 ;j++)      //get the number of the sub-node : 1.
 		{	
 			subnode_number[attribute      [node[j][0]]                 [i]     ][0]++;
 			/*the nodes in sub-tree*//* the next attr */
-			/*        the value(branch) in the  attribute      */
-			/*                  (the number of the sub-node : 1) ++                    */
+			/*        the value(branch) in the  attribute				*/
+			/*                  (the number of the sub-node : 1) ++                   */
 		}
-		for(j=0; node[j][1]!=-1 ;j++)
+		for(j=0; j<answer2 && node[j][1]!=-1 ;j++)
 		{
 			subnode_number[attribute      [node[j][1]]                [i]     ][1]++;
 			/*the nodes in sub-tree*//* the next attr */
@@ -308,10 +335,11 @@ attr decision_tree::entropy(int path[25][2])
 			/*                  (the number of the sub-node : 2) ++                    */
 		}
 		//compute the entropy.
-		double prob0 = (double)subnode_number[j][0]/counter;
-		double prob1 = (double)subnode_number[j][1]/counter;
+		double prob0 , prob1;
 		for(j=0;j<6;j++)
 		{
+			prob0 = (double)subnode_number[j][0]/counter;
+			prob1 = (double)subnode_number[j][1]/counter;
 			info_content=-prob0 * log(prob0)/log(2.0)
 						 -prob1 * log(prob1)/log(2.0)
 						 + info_content;
