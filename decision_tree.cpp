@@ -202,7 +202,15 @@ attr decision_tree::entropy(int sequence[25][2])
 {
 	attr min_attr = { 0 , 5 , 0};
 	double min_number = MAX_SAMPLE;
-	int node[MAX_SAMPLE][2];      //the node : 1 , 2.
+	//int node[MAX_SAMPLE][2];      //the node : 1 , 2.
+	int **node = NULL;			  //the node : 1 , 2.
+
+
+	node = new int* [MAX_SAMPLE];
+	for( int i = 0 ; i < MAX_SAMPLE ; i++ )
+	{
+		node[i] = new int [2];
+	}
 	
 	for(int i=0;i<MAX_SAMPLE;i++) //node(initialize)
 	{
@@ -324,5 +332,11 @@ attr decision_tree::entropy(int sequence[25][2])
 			min_attr.min_value = attribute[i][min_attr.name];
 		}
 	}
+
+	for( int i = 0 ; i < MAX_SAMPLE ; i++ )
+	{
+		delete [] node[i];
+	}
+	delete [] node;
 	return min_attr;//return the (best) attribute.
 }
