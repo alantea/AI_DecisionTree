@@ -37,6 +37,7 @@ class decision_tree
 		int MAX_SAMPLE;								// count the total sample
 		std::vector<std::vector<int> > attribute;	// training data
         int choseroad[25][6];						// decision tree's path
+		bool complete_tree;
 	public:
         decision_tree();
         ~decision_tree();

@@ -31,6 +31,7 @@ void decision_tree::initial()
         }
     }
     MAX_SAMPLE = 0;
+    complete_tree = false;
 }
 
 void decision_tree::main_menu()
@@ -175,10 +176,13 @@ void decision_tree::gain_tree(int path[25][2],int root,int branch)
 	// check all attribute have been gone
 	for(path_length = 0;path[path_length][0]!=25;path_length++);
 	
-	if(path_length == 24)
+	// pass attribute 1 , 3 , 9
+	if(path_length == 24 - 3)
 	{
+		complete_tree = true;
 		return;
 	}
+
 	
 	attr next_attr;
 	next_attr = entropy(path);//compute the entropies to choose the attribute
@@ -187,7 +191,6 @@ void decision_tree::gain_tree(int path[25][2],int root,int branch)
 	 * Ex: choseroad[24][0] = 3 means first the decision tree will look the attribute 3 in the first
 	 */
 	choseroad[root][branch] = next_attr.name;
-	path[path_length][0]= next_attr.name;
 	
 	// if the maximum informaction conent = 0 , it doesn't need to know the subtree
 	if(next_attr.name < 0)
@@ -196,9 +199,16 @@ void decision_tree::gain_tree(int path[25][2],int root,int branch)
 	}
 	for(int i = next_attr.min_value ; i <= next_attr.max_value ; i++)
 	{
+		path[path_length][0] = next_attr.name;
 		path[path_length][1] = i;
 		gain_tree(path,next_attr.name,i);
+		path[path_length][0] = 25;
 		path[path_length][1] = 25;
+		
+		if( complete_tree )
+		{
+			return;
+		}
 	}
 }
 
