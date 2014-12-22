@@ -27,6 +27,9 @@
 *.out
 *.app
 
+# core dump
+*.core
+
 # outptu file
 tree.csv
 output.csv

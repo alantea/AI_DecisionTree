@@ -81,6 +81,23 @@ decision_tree::~decision_tree()
 {
 }
 
+void decision_tree::reset_data()
+{
+    for(int i = 0 ; i < 25 ; i++)
+    {
+        for(int j = 0 ; j < 6 ; j++)
+        {
+            choseroad[i][j] = -3 ;
+        }
+    }
+	complete_tree = false;
+	MAX_SAMPLE = 0;
+	for( size_t i = 0 ; i < attribute.size() ; i++ )
+	{
+		attribute[i].clear();
+	}
+	attribute.clear();
+}
 void decision_tree::testing_main()
 /************************************************************************
 	Entrance of the testing mode;
@@ -92,6 +109,7 @@ void decision_tree::testing_main()
 	string str_buf;
     while(1)
     {
+		reset_data();
 		read_file("TestData700.csv");
 	//	read_tree("tree.csv");
 
@@ -153,24 +171,40 @@ void decision_tree::search_tree()
 
 	srand(time(NULL));
 
-	// try to print tree
-	/*
-	for( map<int,tree>::iterator i = test.child.begin() ; i != test.child.end() ; ++i )
-	{
-		cout << "test" << endl;
-		cout << i->first << " " << i->second.value << endl;
-
-		for( map<int,tree>::iterator j = i->second.child.begin() ; j != i->second.child.end() ; ++j )
-		{
-			cout << "test2" << endl;
-			cout << j->first << " " << j->second.value << endl;
-		}
-	}
-	*/
 	
 	for( size_t i = 0 ; i < attribute.size() ; i++ )
 	{
+		tree it = test.child[0];		// start point
+		bool no_answer = false;
+
+		map<int,tree>::iterator ii;
 		
+		while( it.value >= 0 )
+		{
+			// check the child node is exist
+			ii = it.child.find( attribute[i] [it.value] );
+			if( ii == it.child.end() )
+			{
+				no_answer = true;
+				break;
+			}
+	
+			it = it.child[ attribute[i] [it.value] ];
+						   /* get next attr */
+		}
+
+		if( it.value == -3 || no_answer )	// no result
+		{
+			fout << rand()%2 + 1 << endl;
+		}
+		else if( it.value == -2 )
+		{
+			fout << "2" << endl;
+		}
+		else if( it.value == -1 )
+		{
+			fout << "1" << endl;
+		}
 	}
 }
 

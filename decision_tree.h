@@ -59,7 +59,8 @@ class decision_tree
 		void read_file(std::string input_file);
         void gain_tree(int path[25][2] ,tree &parent ,int root = 24,int branch=0 );
         void save_tree();
-			
+		
+		void reset_data();		
 		void read_tree(std::string input_file);
 		void search_tree();
 };
