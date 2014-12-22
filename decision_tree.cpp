@@ -93,7 +93,7 @@ void decision_tree::testing_main()
     while(1)
     {
 		read_file("TestData700.csv");
-		read_tree("tree.csv");
+	//	read_tree("tree.csv");
 
 		search_tree();
 
@@ -150,44 +150,27 @@ void decision_tree::read_tree(std::string input_file)
 void decision_tree::search_tree()
 {
 	fstream fout( "output.csv" , ios::out | ios::trunc);
-	int mini , next_attr;
 
 	srand(time(NULL));
+
+	// try to print tree
+	/*
+	for( map<int,tree>::iterator i = test.child.begin() ; i != test.child.end() ; ++i )
+	{
+		cout << "test" << endl;
+		cout << i->first << " " << i->second.value << endl;
+
+		for( map<int,tree>::iterator j = i->second.child.begin() ; j != i->second.child.end() ; ++j )
+		{
+			cout << "test2" << endl;
+			cout << j->first << " " << j->second.value << endl;
+		}
+	}
+	*/
 	
 	for( size_t i = 0 ; i < attribute.size() ; i++ )
 	{
-		int now_attribute = choseroad[24][0];
-		clock_t tStart = clock(), tEnd, tUsed;
-		while(1)
-		{
-			tEnd = clock();
-			tUsed = (double)(tEnd - tStart) / CLOCKS_PER_SEC;
-			if( tUsed > 5.0 )
-			{
-				cerr << "Loooooooooooooooooooooooooop in search tree." << endl;
-				exit(-1);
-			}
-
-			mini = *min_element( attribute[i].begin() , attribute[i].end() );
-			next_attr = choseroad[now_attribute][ attribute[i][now_attribute] - mini ];
-
-			if( next_attr == -3 )	// no result
-			{
-				fout << rand()%2 + 1 << endl;
-				break;
-			}
-			else if( next_attr == -2 )
-			{
-				fout << "2" << endl;
-				break;
-			}
-			else if( next_attr == -1 )
-			{
-				fout << "1" << endl;
-				break;
-			}
-			now_attribute = next_attr;
-		}
+		
 	}
 }
 
@@ -219,7 +202,8 @@ void decision_tree::training_main()
 
         read_file("TraData700.csv");
 
-        gain_tree(path);
+		test.value = 24;	// start value
+        gain_tree(path,test);
         save_tree();
 
 		cout << "End Training." << endl;
@@ -276,10 +260,11 @@ void decision_tree::read_file(string input_file)
     train_file.close();
 }
 
-void decision_tree::gain_tree(int path[25][2],int root,int branch)
+void decision_tree::gain_tree(int path[25][2],tree &parent,int root,int branch)
 {
 	// count attributes have gone
 	int path_length = 0;
+	tree child;
 
 	// check all attribute have been gone
 	for(path_length = 0;path[path_length][0]!=25;path_length++);
@@ -299,6 +284,9 @@ void decision_tree::gain_tree(int path[25][2],int root,int branch)
 	 * Ex: choseroad[24][0] = 3 means first the decision tree will look the attribute 3 in the first
 	 */
 	choseroad[root][branch] = next_attr.name;
+	cout << root << " " << branch << " " << next_attr.name << endl;
+	child.value = next_attr.name;
+	parent.child[branch] = child;
 
 	// if the maximum informaction conent = 0 , it doesn't need to know the subtree
 	if(next_attr.name < 0)
@@ -309,13 +297,13 @@ void decision_tree::gain_tree(int path[25][2],int root,int branch)
 	{
 		path[path_length][0] = next_attr.name;
 		path[path_length][1] = i;
-		gain_tree(path,next_attr.name,i);
+		gain_tree(path,parent.child[branch],next_attr.name,i);
 		path[path_length][0] = 25;
 		path[path_length][1] = 25;
 
 		if( complete_tree )
 		{
-			return;
+		//	return;
 		}
 	}
 }

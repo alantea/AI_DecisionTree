@@ -16,6 +16,15 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
+#include <set>
+
+class tree
+{
+public:
+	int value;
+	std::map<int , tree> child;
+};
 
 class attr
 {
@@ -30,6 +39,8 @@ class attr
 class decision_tree
 {
 	private:
+		tree test;
+
         void initial();
 
         void main_menu();
@@ -46,7 +57,7 @@ class decision_tree
         ~decision_tree();
 
 		void read_file(std::string input_file);
-        void gain_tree(int path[25][2],int root = 24,int branch=0);
+        void gain_tree(int path[25][2] ,tree &parent ,int root = 24,int branch=0 );
         void save_tree();
 			
 		void read_tree(std::string input_file);
