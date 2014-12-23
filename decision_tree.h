@@ -53,7 +53,7 @@ class decision_tree
         int choseroad[25][6];						// decision tree's path
 		bool complete_tree;
 
-		void save_node(std::fstream &out, tree now);
+		void save_node(std::fstream &out, tree &now);
 		void read_node(std::fstream &in, tree &now);
 	public:
         decision_tree();

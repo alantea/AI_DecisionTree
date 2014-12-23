@@ -107,6 +107,8 @@ void decision_tree::reset_tree(tree &now)
 	{
 		reset_tree( i->second );
 	}
+	now.child.clear();
+	now.value = -99;
 }
 
 void decision_tree::testing_main()
@@ -123,7 +125,7 @@ void decision_tree::testing_main()
 		reset_data();
 		read_file("TestData700.csv");
 		read_tree("tree.csv");
-
+		
 		search_tree();
 
 		cout << "End Testing." << endl;
@@ -187,6 +189,7 @@ void decision_tree::search_tree()
 	for( size_t i = 0 ; i < attribute.size() ; i++ )
 	{
 		tree it = dctree.child[0];		// start point
+		tree tmp;
 		bool no_answer = false;
 
 		map<int,tree>::iterator ii;
@@ -194,20 +197,21 @@ void decision_tree::search_tree()
 		while( it.value >= 0 )
 		{
 			// check the child node is exist
-			ii = it.child.find( attribute[i] [it.value] );
+			ii = it.child.find( attribute[i][it.value] );
 			if( ii == it.child.end() )
 			{
 				no_answer = true;
 				break;
 			}
 	
-			it = it.child[ attribute[i] [it.value] ];
+			tmp = it.child[ attribute[i][it.value] ];
 						   /* get next attr */
+			it = tmp;
 		}
 
 		if( it.value == -3 || no_answer )	// no result
 		{
-	//		cout << "rand() at " << i << endl;
+			cout << "rand() at " << i << endl;
 			fout << rand()%2 + 1 << endl;
 		}
 		else if( it.value == -2 )
@@ -324,7 +328,7 @@ void decision_tree::gain_tree(int path[25][2],tree &parent,int root,int branch)
 	 * Ex: choseroad[24][0] = 3 means first the decision tree will look the attribute 3 in the first
 	 */
 	//choseroad[root][branch] = next_attr.name;
-	cout << root << " " << branch << " " << next_attr.name << endl;
+	//cout << root << " " << branch << " " << next_attr.name << endl;
 	child.value = next_attr.name;
 	parent.child[branch] = child;
 
@@ -353,7 +357,7 @@ void decision_tree::save_tree(string output_file)
     treeout.close();
 }
 
-void decision_tree::save_node(fstream &out, tree now)
+void decision_tree::save_node(fstream &out, tree &now)
 {
 	out << now.value ;
 
