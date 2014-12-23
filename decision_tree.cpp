@@ -21,6 +21,49 @@ void tree::initial_child(tree &now)
 	now.value = -99;
 }
 
+void tree::read(std::string input_file)
+{
+    fstream tree_file;
+	tree_file.open( input_file.c_str() , fstream::in );
+
+	read_node( tree_file , *this );
+
+    tree_file.close();
+}
+
+void tree::read_node(std::fstream &fin, tree &now)
+{
+	string buf;
+	tree tmp;
+	int branch;
+
+	getline( fin , buf );
+	for( size_t i = 0 ; i < buf.length() ; i++ )
+	{
+		if( buf[i] == ',' )
+		{
+			buf[i] = ' ';
+		}
+	}
+
+	stringstream ss(buf);
+
+	// get the attribute name
+	ss >> now.value;
+
+	// insert the branch into child
+	while( ss >> branch )
+	{
+		now.child[branch] = tmp;
+	}
+
+	// recursive to read the node
+	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
+	{
+		read_node( fin , i->second );
+	}
+}
+
 /** class : attr
  */
 attr::attr()
@@ -65,12 +108,12 @@ void decision_tree::main_menu()
     while(1)
     {
 		cout << "----------------------" << endl;
-        cout << "	MENU" << endl;
+        cout << "         MENU         " << endl;
         cout << "----------------------" << endl;
-        cout << "1. Testing mode" << endl;
-        cout << "2. Training mode" << endl;	//The first part : produce the decision tree.
-        cout << endl;
-        cout << "Enter option : " << ends;
+        cout << "1. Testing mode       " << endl;
+        cout << "2. Training mode      " << endl;
+        cout << "                      " << endl;
+        cout << "Enter option :	"		 << ends;
 
 		getline(cin, str_buf);
         int option = atoi(str_buf.c_str());
@@ -78,15 +121,15 @@ void decision_tree::main_menu()
 
         switch(option)
         {
-        case 1:
-            testing_main();		//Entrance of the testing mode
-            break;
-        case 2:
-            training_main();		//Entrance of the training mode
-            break;
-        default:
-            cout << "This is an invalid option." << endl;
-            break;
+			case 1:
+				testing_main();			//Entrance of the testing mode
+				break;
+			case 2:
+				training_main();		//Entrance of the training mode
+				break;
+			default:
+				cout << "This is an invalid option." << endl;
+				break;
         }//end switch
 
         cout << "Do you want to continue [y/N]? " << ends;
@@ -104,6 +147,7 @@ void decision_tree::main_menu()
 
 decision_tree::~decision_tree()
 {
+	initial();
 }
 
 void decision_tree::testing_main()
@@ -118,19 +162,22 @@ void decision_tree::testing_main()
     while(1)
     {
 		initial();
+
 		read_file("TestData700.csv");
-		read_tree("tree.csv");
+		// read_file("input.csv");		// using in the upload
+
+		dctree.read("tree.csv");
 		
 		search_tree();
 
 		cout << "End Testing." << endl;
-        cout << "Do you want to continue training [y/N]? " << ends;
+        cout << "Do you want to continue testing [y/N]? " << ends;
 
 		getline(cin, str_buf);
-        char cont = str_buf[0];
 
-        if(cont != 'y' && cont != 'Y'){
-			cout << "Return to MENU ..."<<endl;
+        if(str_buf[0] != 'y' && str_buf[0] != 'Y')
+        {
+			cout << "Return to MENU ..." << endl;
 			usleep(500000);
 			break;
         }
@@ -138,43 +185,6 @@ void decision_tree::testing_main()
     }//end while
     return;
 }//end testing_main()
-
-void decision_tree::read_tree(std::string input_file)
-{
-    fstream tree_file;
-	tree_file.open( input_file.c_str() , fstream::in );
-
-	read_node( tree_file , dctree );
-
-    tree_file.close();
-}
-void decision_tree::read_node(std::fstream &in, tree &now)
-{
-	string buf;
-	tree tmp;
-	int branch;
-
-	getline( in , buf );
-	for( size_t i = 0 ; i < buf.length() ; i++ )
-	{
-		if( buf[i] == ',' )
-		{
-			buf[i] = ' ';
-		}
-	}
-	stringstream ss(buf);
-
-	ss >> now.value;
-	while( ss >> branch )
-	{
-		now.child[branch] = tmp;
-	}
-
-	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
-	{
-		read_node( in , i->second );
-	}
-}
 
 void decision_tree::search_tree()
 {
@@ -184,7 +194,7 @@ void decision_tree::search_tree()
 	for( size_t i = 0 ; i < attribute.size() ; i++ )
 	{
 		tree it = dctree.child[0];		// start point
-		tree tmp;
+		tree tmp;						// if doesn't use the tmp , it will be error in serrch tree
 		bool no_answer = false;
 
 		map<int,tree>::iterator ii;
@@ -206,7 +216,7 @@ void decision_tree::search_tree()
 
 		if( it.value == -3 || no_answer )	// no result
 		{
-			cout << "rand() at " << i << endl;
+	//		cout << "rand() at " << i << endl;
 			fout << rand()%2 + 1 << endl;
 		}
 		else if( it.value == -2 )
@@ -251,16 +261,15 @@ void decision_tree::training_main()
 
 		dctree.value = 24;	// start value
         gain_tree(path,dctree);
-        save_tree("tree.csv");
+        dctree.save("tree.csv");
 
 		cout << "End Training." << endl;
         cout << "Do you want to continue training [y/N]? " << ends;
 
 		getline(cin, str_buf);
-        char cont = str_buf[0];
 
-        if(cont != 'y' && cont != 'Y'){
-			cout << "Return to MENU ..."<<endl;
+        if(str_buf[0] != 'y' && str_buf[0] != 'Y'){
+			cout << "Return to MENU ..." << endl;
 			usleep(500000);
 			break;
         }
@@ -285,6 +294,7 @@ void decision_tree::read_file(string input_file)
 		exit(-1);
 	}
 
+	// get each line from training file
 	for(int i=0; getline(train_file,input_buf); i++)
 	{
 		input_num.clear();
@@ -342,17 +352,17 @@ void decision_tree::gain_tree(int path[25][2],tree &parent,int root,int branch)
 	}
 }
 
-void decision_tree::save_tree(string output_file)
+void tree::save(string output_file)
 {
     fstream treeout;
     treeout.open( output_file.c_str() , fstream::out | fstream::trunc);
 
-	save_node( treeout , dctree );
+	save_node( treeout , *this );
 
     treeout.close();
 }
 
-void decision_tree::save_node(fstream &out, tree &now)
+void tree::save_node(fstream &out, tree &now)
 {
 	out << now.value ;
 

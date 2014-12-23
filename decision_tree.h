@@ -23,11 +23,15 @@ class tree
 {
 	private:
 		void initial_child(tree &now);
+		void save_node(std::fstream &out, tree &now);
+		void read_node(std::fstream &fin, tree &now);
 	public:
 		int value;
 		std::map<int , tree> child;
-		
+
 		void initial();
+		void save(std::string output_file);
+		void read(std::string input_file);
 };
 
 class attr
@@ -44,27 +48,22 @@ class decision_tree
 {
 	private:
 		tree dctree;
-
-        void initial();
-
-        void main_menu();
-        void testing_main();						//Entrance of the testing mode
-		void training_main();						// Entrance of the training mode
-		attr entropy(int path[25][2]);
+		std::vector<std::vector<int> > attribute;	// training data
 
 		int MAX_SAMPLE;								// count the total sample
-		std::vector<std::vector<int> > attribute;	// training data
         int choseroad[25][6];						// decision tree's path
 
+        void initial();
+        void main_menu();
+
 		// Testing mode
+        void testing_main();						//Entrance of the testing mode
         void gain_tree(int path[25][2] ,tree &parent ,int root = 24,int branch=0 );
-        void save_tree(std::string output_file);
-		void save_node(std::fstream &out, tree &now);
+		attr entropy(int path[25][2]);
 		
 		// Training mode
+		void training_main();						// Entrance of the training mode
 		void search_tree();
-		void read_tree(std::string input_file);
-		void read_node(std::fstream &in, tree &now);
 		
 		// both two mode
 		void read_file(std::string input_file);
