@@ -147,6 +147,13 @@ void decision_tree::read_node(std::fstream &in, tree now)
 	int branch;
 
 	getline( in , buf );
+	for( size_t i = 0 ; i < buf.length() ; i++ )
+	{
+		if( buf[i] == ',' )
+		{
+			buf[i] = ' ';
+		}
+	}
 	stringstream ss(buf);
 
 	ss >> now.value;
@@ -355,7 +362,7 @@ void decision_tree::save_node(fstream &out, tree now)
 	// print the next branch
 	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
 	{
-		out << " " << i->first;
+		out << "," << i->first;
 	}
 	out << endl;
 
