@@ -111,7 +111,7 @@ void decision_tree::testing_main()
     {
 		reset_data();
 		read_file("TestData700.csv");
-	//	read_tree("tree.csv");
+		read_tree("tree.csv");
 
 		search_tree();
 
@@ -136,33 +136,29 @@ void decision_tree::read_tree(std::string input_file)
     fstream tree_file;
 	tree_file.open( input_file.c_str() , fstream::in );
 
-	string input_buf;
-/*
-	int tmp;
+	read_node( tree_file , dctree );
 
-	if( !tree_file.is_open() )
-	{
-		cout << "Can't open the file : " << input_file << endl;
-		exit(-1);
-	}
-
-	for(int i=0; getline(tree_file,input_buf); i++)
-	{
-		for(size_t j=0; j < input_buf.length() ; j++ )
-		{
-			if( input_buf[j] == ',' )
-			{
-				input_buf[j] = ' ';
-			}
-		}
-		stringstream ss(input_buf);
-		for(int j=0; ss >> tmp ; j++ )
-		{
-			choseroad[i][j] = tmp;
-		}
-	}
-*/
     tree_file.close();
+}
+void decision_tree::read_node(std::fstream &in, tree now)
+{
+	string buf;
+	tree tmp;
+	int branch;
+
+	getline( in , buf );
+	stringstream ss(buf);
+
+	ss >> now.value;
+	while( ss >> branch )
+	{
+		now.child[branch] = tmp;
+	}
+
+	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
+	{
+		read_node( in , i->second );
+	}
 }
 
 void decision_tree::search_tree()
@@ -354,13 +350,13 @@ void decision_tree::save_tree()
 
 void decision_tree::save_node(fstream &out, tree now)
 {
-	cout << now.value ;
+	out << now.value ;
 	// print the next branch
 	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
 	{
-		cout << " " << i->first;
+		out << " " << i->first;
 	}
-	cout << endl;
+	out << endl;
 	// recursive branch
 	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
 	{

@@ -54,6 +54,7 @@ class decision_tree
 		bool complete_tree;
 
 		void save_node(std::fstream &out, tree now);
+		void read_node(std::fstream &in, tree now);
 	public:
         decision_tree();
         ~decision_tree();
