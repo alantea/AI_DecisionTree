@@ -97,7 +97,18 @@ void decision_tree::reset_data()
 		attribute[i].clear();
 	}
 	attribute.clear();
+	reset_tree(dctree);
+	dctree.child.clear();
 }
+
+void decision_tree::reset_tree(tree &now)
+{
+	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
+	{
+		reset_tree( i->second );
+	}
+}
+
 void decision_tree::testing_main()
 /************************************************************************
 	Entrance of the testing mode;
@@ -140,7 +151,7 @@ void decision_tree::read_tree(std::string input_file)
 
     tree_file.close();
 }
-void decision_tree::read_node(std::fstream &in, tree now)
+void decision_tree::read_node(std::fstream &in, tree &now)
 {
 	string buf;
 	tree tmp;
@@ -171,9 +182,7 @@ void decision_tree::read_node(std::fstream &in, tree now)
 void decision_tree::search_tree()
 {
 	fstream fout( "output.csv" , ios::out | ios::trunc);
-
 	srand(time(NULL));
-
 	
 	for( size_t i = 0 ; i < attribute.size() ; i++ )
 	{
@@ -198,6 +207,7 @@ void decision_tree::search_tree()
 
 		if( it.value == -3 || no_answer )	// no result
 		{
+	//		cout << "rand() at " << i << endl;
 			fout << rand()%2 + 1 << endl;
 		}
 		else if( it.value == -2 )
@@ -236,7 +246,8 @@ void decision_tree::training_main()
             path[i][0]=25;
             path[i][1]=25;
         }
-
+        reset_data();
+		
         read_file("TraData700.csv");
 
 		dctree.value = 24;	// start value
@@ -312,8 +323,8 @@ void decision_tree::gain_tree(int path[25][2],tree &parent,int root,int branch)
 	/* When first time in gain tree, it will record the first attribute to go
 	 * Ex: choseroad[24][0] = 3 means first the decision tree will look the attribute 3 in the first
 	 */
-	choseroad[root][branch] = next_attr.name;
-	//cout << root << " " << branch << " " << next_attr.name << endl;
+	//choseroad[root][branch] = next_attr.name;
+	cout << root << " " << branch << " " << next_attr.name << endl;
 	child.value = next_attr.name;
 	parent.child[branch] = child;
 
@@ -497,6 +508,8 @@ attr decision_tree::entropy(int path[25][2])
 			{
 				info_b += - prob1 * log(prob1) / log(2.0);
 			}
+			
+
 			info_content += sum/counter * info_b;
 		}
 		if(min_number > info_content) // check whether the entropy of the attribute is  min(best) or not.

@@ -54,7 +54,7 @@ class decision_tree
 		bool complete_tree;
 
 		void save_node(std::fstream &out, tree now);
-		void read_node(std::fstream &in, tree now);
+		void read_node(std::fstream &in, tree &now);
 	public:
         decision_tree();
         ~decision_tree();
@@ -63,7 +63,8 @@ class decision_tree
         void gain_tree(int path[25][2] ,tree &parent ,int root = 24,int branch=0 );
         void save_tree(std::string output_file);
 		
-		void reset_data();		
+		void reset_data();
+		void reset_tree(tree &now);
 		void read_tree(std::string input_file);
 		void search_tree();
 };
