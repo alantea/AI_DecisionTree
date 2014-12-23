@@ -234,7 +234,7 @@ void decision_tree::training_main()
 
 		dctree.value = 24;	// start value
         gain_tree(path,dctree);
-        save_tree();
+        save_tree("tree.csv");
 
 		cout << "End Training." << endl;
         cout << "Do you want to continue training [y/N]? " << ends;
@@ -338,10 +338,10 @@ void decision_tree::gain_tree(int path[25][2],tree &parent,int root,int branch)
 	}
 }
 
-void decision_tree::save_tree()
+void decision_tree::save_tree(string output_file)
 {
     fstream treeout;
-    treeout.open( "tree.csv" , fstream::out | fstream::trunc);
+    treeout.open( output_file.c_str() , fstream::out | fstream::trunc);
 
 	save_node( treeout , dctree );
 
@@ -351,12 +351,14 @@ void decision_tree::save_tree()
 void decision_tree::save_node(fstream &out, tree now)
 {
 	out << now.value ;
+
 	// print the next branch
 	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
 	{
 		out << " " << i->first;
 	}
 	out << endl;
+
 	// recursive branch
 	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
 	{
