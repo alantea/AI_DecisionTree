@@ -137,7 +137,7 @@ void decision_tree::read_tree(std::string input_file)
 	tree_file.open( input_file.c_str() , fstream::in );
 
 	string input_buf;
-
+/*
 	int tmp;
 
 	if( !tree_file.is_open() )
@@ -161,7 +161,7 @@ void decision_tree::read_tree(std::string input_file)
 			choseroad[i][j] = tmp;
 		}
 	}
-
+*/
     tree_file.close();
 }
 
@@ -318,7 +318,7 @@ void decision_tree::gain_tree(int path[25][2],tree &parent,int root,int branch)
 	 * Ex: choseroad[24][0] = 3 means first the decision tree will look the attribute 3 in the first
 	 */
 	choseroad[root][branch] = next_attr.name;
-	cout << root << " " << branch << " " << next_attr.name << endl;
+	//cout << root << " " << branch << " " << next_attr.name << endl;
 	child.value = next_attr.name;
 	parent.child[branch] = child;
 
@@ -346,25 +346,26 @@ void decision_tree::save_tree()
 {
     fstream treeout;
     treeout.open( "tree.csv" , fstream::out | fstream::trunc);
-    /*
-    int i,j;
 
-    for(i=0 ; i < 25 ; i++)
-    {
-        for(j=0 ; j < 6 ; j++)
-        {
-            tree << choseroad[i][j] ;
-            if( j < 5 )
-            {
-                tree << ',' ;
-            }
-        }
-        tree << endl ;
-    }
-    */
-
+	save_node( treeout , dctree );
 
     treeout.close();
+}
+
+void decision_tree::save_node(fstream &out, tree now)
+{
+	cout << now.value ;
+	// print the next branch
+	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
+	{
+		cout << " " << i->first;
+	}
+	cout << endl;
+	// recursive branch
+	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
+	{
+		save_node( out , i->second );
+	}
 }
 
 attr decision_tree::entropy(int path[25][2])

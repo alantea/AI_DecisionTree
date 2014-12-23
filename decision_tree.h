@@ -44,7 +44,7 @@ class decision_tree
         void initial();
 
         void main_menu();
-        void testing_main();							//Entrance of the testing mode
+        void testing_main();						//Entrance of the testing mode
 		void training_main();						// Entrance of the training mode
 		attr entropy(int path[25][2]);
 
@@ -52,6 +52,8 @@ class decision_tree
 		std::vector<std::vector<int> > attribute;	// training data
         int choseroad[25][6];						// decision tree's path
 		bool complete_tree;
+
+		void save_node(std::fstream &out, tree now);
 	public:
         decision_tree();
         ~decision_tree();
