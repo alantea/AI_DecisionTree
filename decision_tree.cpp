@@ -2,6 +2,27 @@
 
 using namespace std;
 
+/** class : tree
+ */
+void tree::initial()
+{
+	initial_child(*this);
+	this->child.clear();
+	this->value = -99;
+}
+
+void tree::initial_child(tree &now)
+{
+	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
+	{
+		initial_child( i->second );
+	}
+	now.child.clear();
+	now.value = -99;
+}
+
+/** class : attr
+ */
 attr::attr()
 {
 	name = min_value = max_value = 0;
@@ -16,8 +37,6 @@ attr::attr(int a, int b ,int c)
 
 decision_tree::decision_tree()
 {
-	initial();
-
 	main_menu();
 }
 
@@ -31,7 +50,13 @@ void decision_tree::initial()
         }
     }
     MAX_SAMPLE = 0;
-    complete_tree = false;
+	for( size_t i = 0 ; i < attribute.size() ; i++ )
+	{
+		attribute[i].clear();
+	}
+	attribute.clear();
+
+	dctree.initial();
 }
 
 void decision_tree::main_menu()
@@ -81,36 +106,6 @@ decision_tree::~decision_tree()
 {
 }
 
-void decision_tree::reset_data()
-{
-    for(int i = 0 ; i < 25 ; i++)
-    {
-        for(int j = 0 ; j < 6 ; j++)
-        {
-            choseroad[i][j] = -3 ;
-        }
-    }
-	complete_tree = false;
-	MAX_SAMPLE = 0;
-	for( size_t i = 0 ; i < attribute.size() ; i++ )
-	{
-		attribute[i].clear();
-	}
-	attribute.clear();
-	reset_tree(dctree);
-	dctree.child.clear();
-}
-
-void decision_tree::reset_tree(tree &now)
-{
-	for( map<int,tree>::iterator i = now.child.begin() ; i != now.child.end() ; ++i )
-	{
-		reset_tree( i->second );
-	}
-	now.child.clear();
-	now.value = -99;
-}
-
 void decision_tree::testing_main()
 /************************************************************************
 	Entrance of the testing mode;
@@ -122,7 +117,7 @@ void decision_tree::testing_main()
 	string str_buf;
     while(1)
     {
-		reset_data();
+		initial();
 		read_file("TestData700.csv");
 		read_tree("tree.csv");
 		
@@ -250,7 +245,7 @@ void decision_tree::training_main()
             path[i][0]=25;
             path[i][1]=25;
         }
-        reset_data();
+		initial();
 		
         read_file("TraData700.csv");
 

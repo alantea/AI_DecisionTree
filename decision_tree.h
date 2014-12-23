@@ -21,9 +21,13 @@
 
 class tree
 {
-public:
-	int value;
-	std::map<int , tree> child;
+	private:
+		void initial_child(tree &now);
+	public:
+		int value;
+		std::map<int , tree> child;
+		
+		void initial();
 };
 
 class attr
@@ -51,22 +55,24 @@ class decision_tree
 		int MAX_SAMPLE;								// count the total sample
 		std::vector<std::vector<int> > attribute;	// training data
         int choseroad[25][6];						// decision tree's path
-		bool complete_tree;
 
+		// Testing mode
+        void gain_tree(int path[25][2] ,tree &parent ,int root = 24,int branch=0 );
+        void save_tree(std::string output_file);
 		void save_node(std::fstream &out, tree &now);
+		
+		// Training mode
+		void search_tree();
+		void read_tree(std::string input_file);
 		void read_node(std::fstream &in, tree &now);
+		
+		// both two mode
+		void read_file(std::string input_file);
+		
 	public:
         decision_tree();
         ~decision_tree();
 
-		void read_file(std::string input_file);
-        void gain_tree(int path[25][2] ,tree &parent ,int root = 24,int branch=0 );
-        void save_tree(std::string output_file);
-		
-		void reset_data();
-		void reset_tree(tree &now);
-		void read_tree(std::string input_file);
-		void search_tree();
 };
 
 #endif // DECISON_TREE_H_INCLUDED
