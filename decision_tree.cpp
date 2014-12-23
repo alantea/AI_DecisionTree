@@ -449,23 +449,28 @@ attr decision_tree::entropy(int path[25][2])
 		min_attr.name = -1;
 		return min_attr;
 	}
-
+	
+	double info_content=0;
+    double prob0 , prob1;
+    double sum   , info_b;
+	
 	//compute the entropy and get the minimum information content
 	for(i=0;i<24;i++)               //Check all attributes.
 	{
 		for(j=0;j<24 &&    path[j][0] != i    &&  path[j][0] !=25 ;j++);
-					 //the attr in path, filter it.  //the attr not in path
-		if(path[j][0] == i || i==1 || i==3 || i==9) //When the range isn't 0~5, filter it.
+					//the attr in path, filter it.  //the attr not in path
+		if(path[j][0] == i || i==1 || i==3 || i==9)		//When the range isn't 0~5, filter it.
 		{
 			continue;
 		}
+		
 		int subnode_number[6][2]={{0}};					//the number of the sub-node : 1 , 2.
-		double info_content=0;							//the entropy (information content)
-		for(j=0; j<answer1 && node[j][0]!=-1 ;j++)      //get the number of the sub-node : 1.
+		
+		for(j=0; j<answer1 && node[j][0]!=-1 ;j++)		//get the number of the sub-node : 1.
 		{
 			subnode_number[attribute      [node[j][0]]                 [i]     ][0]++;
 			/*the nodes in sub-tree*//* the next attr */
-			/*        the value(branch) in the  attribute				*/
+			/*        the value(branch) in the  attribute                                */
 			/*                  (the number of the sub-node : 1) ++                   */
 		}
 		for(j=0; j<answer2 && node[j][1]!=-1 ;j++)
@@ -476,19 +481,27 @@ attr decision_tree::entropy(int path[25][2])
 			/*                  (the number of the sub-node : 2) ++                    */
 		}
 		//compute the entropy.
-		double prob0 , prob1;
+
+		info_content=0;									//the entropy (information content)
 		for(j=0;j<6;j++)
 		{
-			prob0 = (double)subnode_number[j][0]/counter;
-			prob1 = (double)subnode_number[j][1]/counter;
+			info_b = 0;
+			sum = subnode_number[j][0]+subnode_number[j][1];
+			if(sum == 0)
+			{
+				continue;
+			}
+			prob0 = subnode_number[j][0]/sum;
+			prob1 = subnode_number[j][1]/sum;
 			if( prob0 != 0 )
 			{
-				info_content += - prob0 * log(prob0) / log(2.0);
+				info_b += - prob0 * log(prob0) / log(2.0);
 			}
 			if( prob1 != 0 )
 			{
-				info_content += - prob1 * log(prob1) / log(2.0);
+				info_b += - prob1 * log(prob1) / log(2.0);
 			}
+			info_content += sum/counter * info_b;
 		}
 		if(min_number > info_content) // check whether the entropy of the attribute is  min(best) or not.
 		{
