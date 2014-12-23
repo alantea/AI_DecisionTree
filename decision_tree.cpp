@@ -306,14 +306,6 @@ void decision_tree::gain_tree(int path[25][2],tree &parent,int root,int branch)
 	// check all attribute have been gone
 	for(path_length = 0;path[path_length][0]!=25;path_length++);
 
-	// pass attribute 1 , 3 , 9
-	if(path_length == 24 - 3)
-	{
-		complete_tree = true;
-		return;
-	}
-
-
 	attr next_attr;
 	next_attr = entropy(path);//compute the entropies to choose the attribute
 
@@ -337,11 +329,6 @@ void decision_tree::gain_tree(int path[25][2],tree &parent,int root,int branch)
 		gain_tree(path,parent.child[branch],next_attr.name,i);
 		path[path_length][0] = 25;
 		path[path_length][1] = 25;
-
-		if( complete_tree )
-		{
-		//	return;
-		}
 	}
 }
 
