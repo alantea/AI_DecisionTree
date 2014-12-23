@@ -39,7 +39,7 @@ class attr
 class decision_tree
 {
 	private:
-		tree test;
+		tree dctree;
 
         void initial();
 

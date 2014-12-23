@@ -174,7 +174,7 @@ void decision_tree::search_tree()
 	
 	for( size_t i = 0 ; i < attribute.size() ; i++ )
 	{
-		tree it = test.child[0];		// start point
+		tree it = dctree.child[0];		// start point
 		bool no_answer = false;
 
 		map<int,tree>::iterator ii;
@@ -236,8 +236,8 @@ void decision_tree::training_main()
 
         read_file("TraData700.csv");
 
-		test.value = 24;	// start value
-        gain_tree(path,test);
+		dctree.value = 24;	// start value
+        gain_tree(path,dctree);
         save_tree();
 
 		cout << "End Training." << endl;
@@ -344,8 +344,9 @@ void decision_tree::gain_tree(int path[25][2],tree &parent,int root,int branch)
 
 void decision_tree::save_tree()
 {
-    fstream tree;
-    tree.open( "tree.csv" , fstream::out | fstream::trunc);
+    fstream treeout;
+    treeout.open( "tree.csv" , fstream::out | fstream::trunc);
+    /*
     int i,j;
 
     for(i=0 ; i < 25 ; i++)
@@ -360,7 +361,10 @@ void decision_tree::save_tree()
         }
         tree << endl ;
     }
-    tree.close();
+    */
+
+
+    treeout.close();
 }
 
 attr decision_tree::entropy(int path[25][2])
