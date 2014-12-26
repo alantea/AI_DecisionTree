@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=
-SOURCES=main.cpp decision_tree.cpp tree.cpp
+SOURCES=main.cpp decision_tree.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=decision_tree.out
 
