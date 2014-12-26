@@ -19,8 +19,20 @@
 #include <map>
 #include <set>
 
-// other header
-#include "tree.h"
+class tree
+{
+	private:
+		void initial_child(tree &now);
+		void save_node(std::fstream &out, tree &now);
+		void read_node(std::fstream &fin, tree &now);
+	public:
+		int value;
+		std::map<int , tree> child;
+
+		void initial();
+		void save(std::string output_file);
+		void read(std::string input_file);
+};
 
 class attr
 {
